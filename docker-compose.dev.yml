@@ -1,0 +1,56 @@
+# version: '3.8'
+
+services:
+  # Service Discovery (Eureka) - Production mode
+  eureka-server:
+    image: steeltoeoss/eureka-server:latest
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
+    networks:
+      - english-adventure-network
+
+  # MySQL Database
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: english_adventure_users
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - english-adventure-network
+
+  # Redis for caching
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - english-adventure-network
+
+  # MongoDB for community service
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - english-adventure-network
+
+volumes:
+  mysql_data:
+  mongodb_data:
+
+networks:
+  english-adventure-network:
+    driver: bridge

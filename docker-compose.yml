@@ -1,0 +1,146 @@
+# version: '3.8'
+
+services:
+  # Frontend React App
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080
+      - REACT_APP_WS_URL=ws://localhost:8080
+    depends_on:
+      - api-gateway
+    networks:
+      - english-adventure-network
+
+  # API Gateway (Nginx)
+  api-gateway:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - user-service
+      - game-service
+      - learning-service
+      - community-service
+    networks:
+      - english-adventure-network
+
+  # Service Discovery (Eureka)
+  eureka-server:
+    image: steeltoeoss/eureka-server:latest
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
+    networks:
+      - english-adventure-network
+
+  # User Service (Java Spring Boot)
+  user-service:
+    build:
+      context: ./backend/user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/english_adventure_users
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - english-adventure-network
+
+  # Game Service (Java Spring Boot)
+  game-service:
+    build:
+      context: ./backend/game-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/english_adventure_game
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - mysql-db
+      - eureka-server
+    networks:
+      - english-adventure-network
+
+  # Learning Service (Python FastAPI)
+  learning-service:
+    build:
+      context: ./backend/learning-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - DATABASE_URL=sqlite:///./learning.db
+    networks:
+      - english-adventure-network
+
+  # Community Service (Python FastAPI)
+  community-service:
+    build:
+      context: ./backend/community-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+      - DATABASE_URL=sqlite:///./community.db
+    networks:
+      - english-adventure-network
+
+  # MySQL Database
+  mysql-db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=english_adventure
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - english-adventure-network
+
+  # Redis for caching and sessions
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - english-adventure-network
+
+  # MongoDB for analytics and logs
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - english-adventure-network
+
+volumes:
+  mysql-data:
+  mongodb-data:
+
+networks:
+  english-adventure-network:
+    driver: bridge
