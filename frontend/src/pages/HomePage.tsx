@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { PixelScene } from '../components/PixelRPG/PixelScene';
+import { PixelBackground, FloatingParticles } from '../components/PixelRPG/PixelBackground';
+import { BackgroundMusic } from '../components/PixelRPG/BackgroundMusic';
 import { 
   RPGButton, 
   RPGPanel, 
@@ -43,10 +45,14 @@ const HomePage: React.FC = () => {
   if (isAuthenticated) {
     return (
       <div className="rpg-container">
-        <div className="rpg-header">
+        <PixelBackground pattern="castle" animated={true} opacity={0.1} />
+        <FloatingParticles />
+        <BackgroundMusic autoPlay={false} volume={0.2} />
+        
+        <div className="rpg-header magical-glow">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
             <div>
-              <h1 style={{ margin: '0 0 8px 0', fontSize: '16px', color: '#FFD700' }}>
+              <h1 style={{ margin: '0 0 8px 0', fontSize: '16px', color: '#FFD700' }} className="typewriter">
                 Welcome back, {user?.username}!
               </h1>
               <p style={{ margin: 0, fontSize: '8px', opacity: 0.8 }}>
@@ -55,9 +61,13 @@ const HomePage: React.FC = () => {
             </div>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-              <XPBar currentXP={750} maxXP={1000} level={5} />
+              <div className="breathe">
+                <XPBar currentXP={750} maxXP={1000} level={5} />
+              </div>
               <HealthBar currentHP={85} maxHP={100} />
-              <CoinDisplay amount={1250} />
+              <div className="particle-trail">
+                <CoinDisplay amount={1250} />
+              </div>
             </div>
           </div>
         </div>
@@ -65,25 +75,29 @@ const HomePage: React.FC = () => {
         <div className="rpg-main-content">
           <div>
             {/* Quick Actions */}
-            <RPGPanel title="Quick Start" variant="default">
+            <RPGPanel title="Quick Start" variant="default" className="breathe">
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
                 <Link to="/lessons">
                   <RPGButton variant="primary" size="large" icon="fb300">
+                    <span className="sparkle" style={{ top: '10%', left: '20%', animationDelay: '0s' }}></span>
                     Start Learning
                   </RPGButton>
                 </Link>
                 <Link to="/game">
                   <RPGButton variant="success" size="large" icon="fb301">
+                    <span className="sparkle" style={{ top: '20%', right: '15%', animationDelay: '0.5s' }}></span>
                     Play Games
                   </RPGButton>
                 </Link>
                 <Link to="/community">
                   <RPGButton variant="warning" size="large" icon="fb302">
+                    <span className="sparkle" style={{ bottom: '15%', left: '30%', animationDelay: '1s' }}></span>
                     Join Community
                   </RPGButton>
                 </Link>
                 <Link to="/profile">
                   <RPGButton variant="secondary" size="large" icon="fb303">
+                    <span className="sparkle" style={{ top: '30%', right: '25%', animationDelay: '1.5s' }}></span>
                     View Profile
                   </RPGButton>
                 </Link>
@@ -167,9 +181,13 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="rpg-container">
-      <div className="rpg-header">
+      <PixelBackground pattern="stars" animated={true} opacity={0.15} />
+      <FloatingParticles />
+      <BackgroundMusic autoPlay={false} volume={0.2} />
+      
+      <div className="rpg-header magical-glow">
         <div style={{ textAlign: 'center' }}>
-          <h1 style={{ margin: '0 0 16px 0', fontSize: '24px', color: '#FFD700' }}>
+          <h1 style={{ margin: '0 0 16px 0', fontSize: '24px', color: '#FFD700' }} className="breathe">
             English Adventure
           </h1>
           <p style={{ margin: '0 0 20px 0', fontSize: '10px', opacity: 0.9, lineHeight: 1.6 }}>
@@ -180,11 +198,13 @@ const HomePage: React.FC = () => {
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/register">
               <RPGButton variant="primary" size="large" icon="fb400">
+                <span className="sparkle" style={{ top: '10%', left: '20%', animationDelay: '0s' }}></span>
                 Start Adventure
               </RPGButton>
             </Link>
             <Link to="/login">
               <RPGButton variant="secondary" size="large" icon="fb401">
+                <span className="sparkle" style={{ top: '20%', right: '15%', animationDelay: '0.7s' }}></span>
                 Continue Journey
               </RPGButton>
             </Link>
@@ -204,9 +224,20 @@ const HomePage: React.FC = () => {
                   borderRadius: '8px',
                   padding: '16px',
                   textAlign: 'center',
-                  transition: 'transform 0.2s ease',
-                  cursor: 'pointer'
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  position: 'relative'
+                }} 
+                className="breathe"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)';
+                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3), 0 0 20px rgba(255,215,0,0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}>
+                  <span className="sparkle" style={{ top: '5%', right: '10%', animationDelay: `${index * 0.3}s` }}></span>
                   <div style={{ marginBottom: '12px' }}>
                     <RPGIcon iconId={feature.icon} size={48} />
                   </div>

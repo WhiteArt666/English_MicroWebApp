@@ -11,6 +11,7 @@
   --rpg-light: #F5E6D3;
   --rpg-border: #654321;
   --rpg-shadow: rgba(0, 0, 0, 0.5);
+  --rpg-glow: #FFD700;
 }
 
 /* Global RPG Styling */
@@ -26,6 +27,89 @@
   font-size: 8px;
   line-height: 1.5;
   text-shadow: 1px 1px 0px var(--rpg-shadow);
+}
+
+/* Background Animations */
+@keyframes grassAnimation {
+  0% { background-position: 0 0, 0 4px, 4px -4px, -4px 0px; }
+  100% { background-position: 8px 8px, 8px 12px, 12px 4px, 4px 8px; }
+}
+
+@keyframes stoneAnimation {
+  0% { background-position: 0 0; }
+  100% { background-position: 8px 8px; }
+}
+
+@keyframes woodAnimation {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 4px 2px, 2px 4px; }
+}
+
+@keyframes castleAnimation {
+  0% { background-position: 0 0, 0 8px, 8px -8px, -8px 0px; }
+  100% { background-position: 16px 16px, 16px 24px, 24px 8px, 8px 16px; }
+}
+
+@keyframes starsAnimation {
+  0% { background-position: 0 0; }
+  100% { background-position: 200px 100px; }
+}
+
+/* Floating Particles */
+.floating-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0) 70%);
+  border-radius: 50%;
+  animation: float 15s linear infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Background Music Controls */
+.background-music-controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.music-control-panel {
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 8px;
+  border-radius: 8px;
+  border: 2px solid var(--rpg-border);
+}
+
+.music-btn {
+  padding: 4px 8px !important;
+  min-width: auto !important;
 }
 
 /* Character Components */
@@ -604,5 +688,215 @@
   .inventory-slot {
     width: 40px;
     height: 40px;
+  }
+}
+
+/* Enhanced Visual Effects */
+.rpg-container {
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Magical glow effect */
+@keyframes magicalGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+}
+
+.magical-glow {
+  animation: magicalGlow 2s ease-in-out infinite;
+}
+
+/* Sparkle effects */
+@keyframes sparkle {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #FFD700, transparent);
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+/* Breathing effect for important elements */
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Typewriter effect */
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.typewriter {
+  overflow: hidden;
+  border-right: 2px solid var(--rpg-glow);
+  white-space: nowrap;
+  animation: typewriter 3s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes blink-caret {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: var(--rpg-glow);
+  }
+}
+
+/* Enhanced button hover effects */
+.rpg-button:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 2px 2px 0px rgba(255, 255, 255, 0.5),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.3),
+    0 4px 8px var(--rpg-shadow),
+    0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.rpg-button:active:not(.disabled) {
+  transform: translateY(0px);
+  animation: buttonPress 0.1s ease-out;
+}
+
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.98);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Enhanced panel effects */
+.rpg-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.rpg-panel::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  animation: borderGlow 3s linear infinite;
+  z-index: -1;
+}
+
+@keyframes borderGlow {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Loading spinner */
+.pixel-spinner {
+  width: 32px;
+  height: 32px;
+  border: 4px solid var(--rpg-border);
+  border-top: 4px solid var(--rpg-glow);
+  border-radius: 0;
+  animation: pixelSpin 1s linear infinite;
+}
+
+@keyframes pixelSpin {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(90deg); }
+  50% { transform: rotate(180deg); }
+  75% { transform: rotate(270deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Screen shake effect */
+@keyframes screenShake {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-2px, -1px); }
+  20% { transform: translate(2px, 1px); }
+  30% { transform: translate(-1px, -2px); }
+  40% { transform: translate(1px, 2px); }
+  50% { transform: translate(-2px, 1px); }
+  60% { transform: translate(2px, -1px); }
+  70% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -2px); }
+  90% { transform: translate(-2px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+.screen-shake {
+  animation: screenShake 0.5s ease-in-out;
+}
+
+/* Particle trail effect */
+.particle-trail {
+  position: relative;
+}
+
+.particle-trail::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: particleTrail 1s ease-out infinite;
+}
+
+@keyframes particleTrail {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3);
   }
 }

@@ -55,14 +55,15 @@ export const RPGIcon: React.FC<IconProps> = ({ iconId, size = 32, className = ''
   return (
     <div className={`rpg-icon ${className}`} onClick={onClick}>
       <img 
-        src={`/Assets/Fantasy-Icons/Free - Raven Fantasy Icons/Separated Files/${assetSize}x${assetSize}/${iconId}.png`}
+        src={`/Assets/Fantasy-Icons/Free-Raven-Fantasy-Icons/Separated-Files/${assetSize}x${assetSize}/${iconId}.png`}
         alt={`Icon ${iconId}`}
         className="pixel-art"
         style={{ width: size, height: size }}
         onError={(e) => {
           // Fallback to a default icon if the specific icon doesn't exist
           const target = e.target as HTMLImageElement;
-          target.src = `/Assets/Fantasy-Icons/Free - Raven Fantasy Icons/Separated Files/${assetSize}x${assetSize}/fb1.png`;
+          const prefix = assetSize === 16 ? 'fa' : assetSize === 32 ? 'fb' : 'fc';
+          target.src = `/Assets/Fantasy-Icons/Free-Raven-Fantasy-Icons/Separated-Files/${assetSize}x${assetSize}/${prefix}1.png`;
         }}
       />
     </div>
@@ -162,7 +163,7 @@ export const HealthBar: React.FC<HealthBarProps> = ({ currentHP, maxHP, classNam
   return (
     <div className={`health-bar ${className}`}>
       <div className="health-bar__container">
-        <RPGIcon iconId="fb1" size={16} className="health-icon" />
+        <RPGIcon iconId="fa1" size={16} className="health-icon" />
         <div className="health-bar__progress">
           <div 
             className="health-bar__fill"
@@ -184,7 +185,7 @@ interface CoinDisplayProps {
 export const CoinDisplay: React.FC<CoinDisplayProps> = ({ amount, className = '' }) => {
   return (
     <div className={`coin-display ${className}`}>
-      <RPGIcon iconId="fb100" size={24} className="coin-icon" />
+      <RPGIcon iconId="fa100" size={24} className="coin-icon" />
       <span className="coin-amount">{amount.toLocaleString()}</span>
     </div>
   );
@@ -209,9 +210,9 @@ export const QuestItem: React.FC<QuestItemProps> = ({
   onClick 
 }) => {
   const difficultyIcons = {
-    easy: 'fb10',
-    medium: 'fb11',
-    hard: 'fb12'
+    easy: 'fa10',
+    medium: 'fa11',
+    hard: 'fa12'
   };
 
   return (
@@ -219,7 +220,7 @@ export const QuestItem: React.FC<QuestItemProps> = ({
       <div className="quest-item__header">
         <RPGIcon iconId={difficultyIcons[difficulty]} size={24} className="difficulty-icon" />
         <h4 className="quest-item__title">{title}</h4>
-        {completed && <RPGIcon iconId="fb20" size={16} className="completed-icon" />}
+        {completed && <RPGIcon iconId="fa20" size={16} className="completed-icon" />}
       </div>
       <p className="quest-item__description">{description}</p>
       <div className="quest-item__footer">
