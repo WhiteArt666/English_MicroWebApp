@@ -47,6 +47,21 @@ public class UserController {
         }
     }
     
+    @GetMapping("/profile/me")
+    public ResponseEntity<?> getMyProfile(@RequestHeader("Authorization") String token) {
+        try {
+            // Extract user ID from token (for now, we'll use a simple approach)
+            // In a real implementation, you would decode the JWT token
+            String userIdStr = token.replace("Bearer dummy_token_for_user_", "");
+            Long userId = Long.parseLong(userIdStr);
+            
+            UserProfileDto profile = userService.getUserProfile(userId);
+            return ResponseEntity.ok(profile);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to get profile: " + e.getMessage());
+        }
+    }
+    
     @PutMapping("/profile/{userId}")
     public ResponseEntity<?> updateUserProfile(
             @PathVariable Long userId, 
